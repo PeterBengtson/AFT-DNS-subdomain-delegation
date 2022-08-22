@@ -9,7 +9,7 @@ STATE_MACHINE_ARN = os.environ['STATE_MACHINE_ARN']
 
 
 def lambda_handler(event, _context):
-    #print(event)
+    print(event)
 
     message_raw = event['Records'][0]['Sns']['Message']
     message = json.loads(message_raw)
