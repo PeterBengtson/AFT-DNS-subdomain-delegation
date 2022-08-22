@@ -54,7 +54,7 @@ echo "Subdomain delegations: $SUBDOMAIN_DELEGATIONS"
 
 echo "Posting SNS message to configure subdomain delegations for the account $ACCOUNT_ID..."
 aws sns publish --topic-arn "arn:aws:sns:xx-xxxx-1:111122223333:aft-subdomain-delegation-topic" \
-  --message "{\"account_id\": \"$ACCOUNT_ID\", \"subdomain_delegations\": ”$SUBDOMAIN_DELEGATIONS}"
+  --message "{\"account_id\": \"$ACCOUNT_ID\", \"subdomain_delegations\": \"$SUBDOMAIN_DELEGATIONS\"}"
 ```
 
 
