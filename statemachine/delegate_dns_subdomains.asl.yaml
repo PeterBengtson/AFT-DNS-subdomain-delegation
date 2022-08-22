@@ -1,0 +1,14 @@
+Comment: Delegates DNS subdomains to an account.
+StartAt: Delegate DNS Subdomains
+States:
+  Delegate DNS Subdomains:
+    Type: Task
+    Resource: '${DelegateDNSSubdomainsFunctionArn}'
+    ResultPath: $.Result
+    Retry:
+      - ErrorEquals:
+          - States.TaskFailed
+        IntervalSeconds: 2
+        MaxAttempts: 5
+        BackoffRate: 2
+    End: true
