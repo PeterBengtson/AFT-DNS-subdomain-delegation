@@ -1,3 +1,4 @@
+import re
 import boto3
 
 
@@ -8,6 +9,9 @@ def lambda_handler(data, _context):
     print("Data: ", data)
 
     account_id = data['account_id']
+    subdomain_delegations = re.split('[,\s]+', data['subdomain_delegations'].strip())
+
+    print(account_id, subdomain_delegations)
 
 
 
