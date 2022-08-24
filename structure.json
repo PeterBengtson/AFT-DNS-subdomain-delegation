@@ -1,0 +1,269 @@
+{
+    "account_id": "139118282244",
+    "subdomain_delegations": "pb.schibsted-sunstone.io, pjotr.schibsted-sunstone.io",
+    "domains": [
+      {
+        "Id": "/hostedzone/Z03764831Q6LO8OSXWOHR",
+        "Name": "sunstone.email.",
+        "CallerReference": "RISWorkflow-RD:a28d7aa8-74cd-43a9-a416-5a87933c3c67",
+        "Config": {
+          "Comment": "HostedZone created by Route53 Registrar",
+          "PrivateZone": false
+        },
+        "ResourceRecordSetCount": 20,
+        "ResourceRecordSets": [
+          {
+            "Name": "sunstone.email.",
+            "Type": "NS",
+            "TTL": 172800,
+            "ResourceRecords": [
+              {
+                "Value": "ns-328.awsdns-41.com."
+              },
+              {
+                "Value": "ns-1755.awsdns-27.co.uk."
+              },
+              {
+                "Value": "ns-1500.awsdns-59.org."
+              },
+              {
+                "Value": "ns-990.awsdns-59.net."
+              }
+            ]
+          },
+          {
+            "Name": "sunstone.email.",
+            "Type": "SOA",
+            "TTL": 900,
+            "ResourceRecords": [
+              {
+                "Value": "ns-328.awsdns-41.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+              }
+            ]
+          },
+          {
+            "Name": "4tlj3bg5wnxf4jydj7qfqo5ytboz7jfa._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "4tlj3bg5wnxf4jydj7qfqo5ytboz7jfa.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "663vjq6ebbemg2hsq5kxty3nhw4bwjc6._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "663vjq6ebbemg2hsq5kxty3nhw4bwjc6.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "aonruy4fk23no5h6v2xahxedimugjj7p._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "aonruy4fk23no5h6v2xahxedimugjj7p.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "cpraicks34ubtsnsrmabxhhum3axa4z5._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "cpraicks34ubtsnsrmabxhhum3axa4z5.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "e5p37srmlgzmoxsexbooiz5qoxtawm67._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "e5p37srmlgzmoxsexbooiz5qoxtawm67.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "gmz4jztpuuf526nlpp4alaaykqqcjpgc._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "gmz4jztpuuf526nlpp4alaaykqqcjpgc.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "iqq55b3s4z4rbo5fr3b6gunhjhumarju._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "iqq55b3s4z4rbo5fr3b6gunhjhumarju.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "kmunuwcpe4a3cqvwp4qmavjm3omt6g57._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "kmunuwcpe4a3cqvwp4qmavjm3omt6g57.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "ktheivejb6rhojim62jmq4oxdw642tsj._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "ktheivejb6rhojim62jmq4oxdw642tsj.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "l2xkbh5f4jwrn7dci6uwmldruck2exlj._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "l2xkbh5f4jwrn7dci6uwmldruck2exlj.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "ml7doqm7rrpqub7o56uqjanlgniwh7mq._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "ml7doqm7rrpqub7o56uqjanlgniwh7mq.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "njs33pi3d7cykbjwm7tubk4vlm7fnlna._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "njs33pi3d7cykbjwm7tubk4vlm7fnlna.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "pffk7gvtbywajxcxofwe4zjil5zojwtv._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "pffk7gvtbywajxcxofwe4zjil5zojwtv.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "rovhx4rtnumfk5n5qszdsyueg2mgh6pe._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "rovhx4rtnumfk5n5qszdsyueg2mgh6pe.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "vkho2letdvnwgs3sn4mqg66i3wx3uq3t._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "vkho2letdvnwgs3sn4mqg66i3wx3uq3t.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "wid3dmoolbjiajaxkabsuvw3xgfqxp4f._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "wid3dmoolbjiajaxkabsuvw3xgfqxp4f.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "wovngkhgdp4ls566jyfnd2rmvaswg7kn._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "wovngkhgdp4ls566jyfnd2rmvaswg7kn.dkim.amazonses.com"
+              }
+            ]
+          },
+          {
+            "Name": "wvsryulqzo5io2uyylpvapb3wn6wn2wv._domainkey.sunstone.email.",
+            "Type": "CNAME",
+            "TTL": 1800,
+            "ResourceRecords": [
+              {
+                "Value": "wvsryulqzo5io2uyylpvapb3wn6wn2wv.dkim.amazonses.com"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "Id": "/hostedzone/Z0972373221RZK0XXLPCF",
+        "Name": "schibsted-sunstone.io.",
+        "CallerReference": "RISWorkflow-RD:bda1bee5-1848-4fa5-8c44-60bceb8b33a1",
+        "Config": {
+          "Comment": "HostedZone created by Route53 Registrar",
+          "PrivateZone": false
+        },
+        "ResourceRecordSetCount": 2,
+        "ResourceRecordSets": [
+          {
+            "Name": "schibsted-sunstone.io.",
+            "Type": "NS",
+            "TTL": 172800,
+            "ResourceRecords": [
+              {
+                "Value": "ns-676.awsdns-20.net."
+              },
+              {
+                "Value": "ns-1914.awsdns-47.co.uk."
+              },
+              {
+                "Value": "ns-1534.awsdns-63.org."
+              },
+              {
+                "Value": "ns-257.awsdns-32.com."
+              }
+            ]
+          },
+          {
+            "Name": "schibsted-sunstone.io.",
+            "Type": "SOA",
+            "TTL": 900,
+            "ResourceRecords": [
+              {
+                "Value": "ns-676.awsdns-20.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subdomains": []
+  }

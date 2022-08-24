@@ -2,30 +2,44 @@ import re
 import os
 import boto3
 
-NETWORKING_ACCOUNT_ID = os.environ.get('NETWORKING_ACCOUNT_ID')
-
 sts_client = boto3.client('sts')
 
 
 def lambda_handler(data, _context):
     account_id = data['account_id']
-    subdomain_delegations = re.split('[,\s]+', data['subdomain_delegations'].strip())
     print(f"Account: {account_id}")
-    print(f"Subdomains: {subdomain_delegations}")
-    print(f"Networking account: {NETWORKING_ACCOUNT_ID}")
 
-    route53 = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
+    client = get_client('route53', account_id, 'us-east-1')
 
-    zones = []
-    marker = None
-    while True:
-        response = route53.list_hosted_zones(Marker=marker)
-        zones += response['HostedZones']
-        if not response['IsTruncated']:
-            break
-        marker = response['NextMarker']
+    zones = get_zones(client)
+    for zone in zones:
+        zone['ResourceRecordSets'] = get_resource_record_sets(client, zone)
 
     return zones
+
+
+def get_zones(client):
+    response = client.list_hosted_zones()
+    zones = response['HostedZones']
+    while response['IsTruncated']:
+        response = client.list_hosted_zones(Marker=response['NextMarker'])
+        zones.extend(response['HostedZones'])
+    return zones
+
+def get_resource_record_sets(client, zone):
+    hosted_zone_id = zone['Id']
+    response = client.list_resource_record_sets(HostedZoneId=hosted_zone_id)
+    resource_record_sets = response['ResourceRecordSets']
+    while response['IsTruncated']:
+        response = client.list_resource_record_sets(
+            HostedZoneId=hosted_zone_id,
+            StartRecordName=response['NextRecordName'],
+            StartRecordType=response['NextRecordType'],
+            StartRecordIdentifier=response['NextRecordIdentifier']
+        )
+        resource_record_sets.extend(response['ResourceRecordSets'])
+    return resource_record_sets
+
     
 
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):

@@ -128,15 +128,13 @@ Resources:
     Properties:
       DefinitionUri: statemachine/delegate_dns_subdomains.asl.yaml
       DefinitionSubstitutions:
+        NetworkingAccountId: !Ref NetworkingAccountId
         CollectDomainDataFunctionArn: !GetAtt CollectDomainDataFunction.Arn
-        CollectSubdomainDataFunctionArn: !GetAtt CollectSubdomainDataFunction.Arn
         DetermineExtentOfChangesFunctionArn: !GetAtt DetermineExtentOfChangesFunction.Arn
         DelegateDNSSubdomainsFunctionArn: !GetAtt DelegateDNSSubdomainsFunction.Arn
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref CollectDomainDataFunction
-        - LambdaInvokePolicy:
-            FunctionName: !Ref CollectSubdomainDataFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref DetermineExtentOfChangesFunction
         - LambdaInvokePolicy:
@@ -158,23 +156,8 @@ Resources:
               Sid: Route53Permissions
               Effect: Allow
               Action:
-                - route53:*
-              Resource: '*'
-      Environment:
-        Variables:
-          NETWORKING_ACCOUNT_ID: !Ref NetworkingAccountId
-
-  CollectSubdomainDataFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/collect_subdomain_data/
-      Policies:
-        - Statement:
-            - 
-              Sid: Route53Permissions
-              Effect: Allow
-              Action:
-                - route53:*
+                - route53:ListHostedZones
+                - route53:ListResourceRecordSets
               Resource: '*'
 
   DetermineExtentOfChangesFunction:

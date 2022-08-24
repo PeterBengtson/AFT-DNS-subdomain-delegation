@@ -4,6 +4,8 @@ States:
   Collect Domain Data:
     Type: Task
     Resource: '${CollectDomainDataFunctionArn}'
+    Parameters:
+      account_id: '${NetworkingAccountId}'
     ResultPath: $.domains
     Retry:
       - ErrorEquals:
@@ -15,7 +17,9 @@ States:
 
   Collect Subdomain Data:
     Type: Task
-    Resource: '${CollectSubdomainDataFunctionArn}'
+    Resource: '${CollectDomainDataFunctionArn}'
+    Parameters:
+      account_id.$: $.account_id
     ResultPath: $.subdomains
     Retry:
       - ErrorEquals:

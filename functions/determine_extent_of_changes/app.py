@@ -6,6 +6,12 @@ def lambda_handler(data, _context):
     print(f"Account: {account_id}")
     print(f"Subdomains: {subdomain_delegations}")
 
-    return ["These are the results", "of the British jury"]
-    
+    create = []
+    update = []
+    delete = []
 
+    return {
+        "create": create,
+        "update": update,
+        "delete": delete
+    }
