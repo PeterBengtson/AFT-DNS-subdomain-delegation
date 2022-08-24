@@ -1,14 +1,50 @@
 Comment: Delegates DNS subdomains to an account.
-StartAt: Delegate DNS Subdomains
+StartAt: Collect Domain Data
 States:
-  Delegate DNS Subdomains:
+  Collect Domain Data:
     Type: Task
-    Resource: '${DelegateDNSSubdomainsFunctionArn}'
-    ResultPath: $.Result
+    Resource: '${CollectDomainDataFunctionArn}'
+    ResultPath: $.domains
     Retry:
       - ErrorEquals:
           - States.TaskFailed
-        IntervalSeconds: 2
+        IntervalSeconds: 5
         MaxAttempts: 5
-        BackoffRate: 2
+        BackoffRate: 5
+    Next: Collect Subdomain Data
+
+  Collect Subdomain Data:
+    Type: Task
+    Resource: '${CollectSubdomainDataFunctionArn}'
+    ResultPath: $.subdomains
+    Retry:
+      - ErrorEquals:
+          - States.TaskFailed
+        IntervalSeconds: 5
+        MaxAttempts: 5
+        BackoffRate: 5
+    Next: Determine Extent of Changes
+
+  Determine Extent of Changes:
+    Type: Task
+    Resource: '${DetermineExtentOfChangesFunctionArn}'
+    ResultPath: $.changes
+    Retry:
+      - ErrorEquals:
+          - States.TaskFailed
+        IntervalSeconds: 5
+        MaxAttempts: 5
+        BackoffRate: 5
+    Next: Delegate DNS Subdomains
+
+  Delegate DNS Subdomains:
+    Type: Task
+    Resource: '${DelegateDNSSubdomainsFunctionArn}'
+    ResultPath: null
+    Retry:
+      - ErrorEquals:
+          - States.TaskFailed
+        IntervalSeconds: 5
+        MaxAttempts: 5
+        BackoffRate: 5
     End: true

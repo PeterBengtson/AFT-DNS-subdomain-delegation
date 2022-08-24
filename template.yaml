@@ -128,10 +128,59 @@ Resources:
     Properties:
       DefinitionUri: statemachine/delegate_dns_subdomains.asl.yaml
       DefinitionSubstitutions:
+        CollectDomainDataFunctionArn: !GetAtt CollectDomainDataFunction.Arn
+        CollectSubdomainDataFunctionArn: !GetAtt CollectSubdomainDataFunction.Arn
+        DetermineExtentOfChangesFunctionArn: !GetAtt DetermineExtentOfChangesFunction.Arn
         DelegateDNSSubdomainsFunctionArn: !GetAtt DelegateDNSSubdomainsFunction.Arn
       Policies:
         - LambdaInvokePolicy:
+            FunctionName: !Ref CollectDomainDataFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref CollectSubdomainDataFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref DetermineExtentOfChangesFunction
+        - LambdaInvokePolicy:
             FunctionName: !Ref DelegateDNSSubdomainsFunction
+
+  CollectDomainDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/collect_domain_data/
+      Policies:
+        - Statement:
+            - 
+              Sid: AssumeTheRole
+              Effect: Allow
+              Action:
+                - sts:AssumeRole
+              Resource: 'arn:aws:iam::*:role/AWSControlTowerExecution'
+            - 
+              Sid: Route53Permissions
+              Effect: Allow
+              Action:
+                - route53:*
+              Resource: '*'
+      Environment:
+        Variables:
+          NETWORKING_ACCOUNT_ID: !Ref NetworkingAccountId
+
+  CollectSubdomainDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/collect_subdomain_data/
+      Policies:
+        - Statement:
+            - 
+              Sid: Route53Permissions
+              Effect: Allow
+              Action:
+                - route53:*
+              Resource: '*'
+
+  DetermineExtentOfChangesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/determine_extent_of_changes/
 
   DelegateDNSSubdomainsFunction:
     Type: AWS::Serverless::Function
