@@ -65,4 +65,31 @@ States:
                   MaxAttempts: 5
                   BackoffRate: 5
               End: true
+    Next: Update Delegations
+
+  Update Delegations:
+    Type: Map
+    ItemsPath: $.update
+    MaxConcurrency: 1
+    Parameters:
+      domain_data.$: $$.Map.Item.Value
+      account_id.$: $.account_id
+      domains.$: $.domains
+      subdomains.$: $.subdomains
+    ResultPath: null
+    Iterator:
+      StartAt: Update Delegation
+      States:
+          Update Delegation:
+              Type: Task
+              Resource: '${UpdateDelegationFunctionArn}'
+              ResultPath: null
+              Retry:
+                -
+                  ErrorEquals:
+                    - States.TaskFailed
+                  IntervalSeconds: 5
+                  MaxAttempts: 5
+                  BackoffRate: 5
+              End: true
     End: true

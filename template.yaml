@@ -132,6 +132,7 @@ Resources:
         CollectDomainDataFunctionArn: !GetAtt CollectDomainDataFunction.Arn
         DetermineExtentOfChangesFunctionArn: !GetAtt DetermineExtentOfChangesFunction.Arn
         CreateDelegationFunctionArn: !GetAtt CreateDelegationFunction.Arn
+        UpdateDelegationFunctionArn: !GetAtt UpdateDelegationFunction.Arn
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref CollectDomainDataFunction
@@ -139,6 +140,8 @@ Resources:
             FunctionName: !Ref DetermineExtentOfChangesFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref CreateDelegationFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref UpdateDelegationFunction
 
   CollectDomainDataFunction:
     Type: AWS::Serverless::Function
@@ -182,6 +185,28 @@ Resources:
               Effect: Allow
               Action:
                 - route53:*
+              Resource: '*'
+      Environment:
+        Variables:
+          NETWORKING_ACCOUNT_ID: !Ref NetworkingAccountId
+
+  UpdateDelegationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/update_delegation/
+      Policies:
+        - Statement:
+            - 
+              Sid: AssumeTheRole
+              Effect: Allow
+              Action:
+                - sts:AssumeRole
+              Resource: 'arn:aws:iam::*:role/AWSControlTowerExecution'
+            - 
+              Sid: Route53Permissions
+              Effect: Allow
+              Action:
+                - route53:ChangeResourceRecordSets
               Resource: '*'
       Environment:
         Variables:

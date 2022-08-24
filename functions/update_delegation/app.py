@@ -11,29 +11,19 @@ sts_client = boto3.client('sts')
 def lambda_handler(data, _context):
     print(data)
 
-    account_id = data['account_id']
+    #account_id = data['account_id']
     subdomain_name = data['domain_data']['subdomain_name']
     fqdn = data['domain_data']['fqdn']
     domains = data['domains']
     subdomains = data['subdomains']
 
     name = f"{subdomain_name}.{fqdn}"
-    caller_reference = f"AFT-Delegated:{uuid.uuid4().hex}"
-
-    source_client = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
-    target_client = get_client('route53', account_id, 'us-east-1')
-
-    print(f"Creating hosted zone {name} in account {account_id}...")
-    response = target_client.create_hosted_zone(
-        Name=name,
-        CallerReference=caller_reference,
-    )
-    name_servers = response['DelegationSet']['NameServers']
-    nameserver_resource_records = [{'Value': ns} for ns in name_servers]
-
+    nameserver_resource_records = find_nameserver_records(find_domain(name, subdomains))
     domain_hosted_zone_id = find_domain(fqdn, domains)['Id']
 
-    print(f"Creating NS records in {fqdn} in Networking account {NETWORKING_ACCOUNT_ID}...")
+    source_client = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
+
+    print(f"Updating NS records in {fqdn} in Networking account {NETWORKING_ACCOUNT_ID}...")
     response = source_client.change_resource_record_sets(
         HostedZoneId=domain_hosted_zone_id,
         ChangeBatch={
@@ -57,6 +47,13 @@ def find_domain(fqdn, domains):
     for domain in domains:
         if domain['Name'] == fqdn:
             return domain
+    return False
+
+
+def find_nameserver_records(subdomain):
+    for record_set in subdomain['ResourceRecordSets']:
+        if record_set['Type'] == 'NS':
+            return record_set['ResourceRecords']
     return False
 
 
