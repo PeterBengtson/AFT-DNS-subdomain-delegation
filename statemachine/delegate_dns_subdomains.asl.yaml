@@ -46,6 +46,7 @@ States:
     MaxConcurrency: 1
     Parameters:
       domain_data.$: $$.Map.Item.Value
+      account_id.$: $.account_id
       domains.$: $.domains
       subdomains.$: $.subdomains
     ResultPath: null
@@ -64,5 +65,4 @@ States:
                   MaxAttempts: 5
                   BackoffRate: 5
               End: true
-
     End: true

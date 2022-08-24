@@ -20,11 +20,34 @@ def lambda_handler(data, _context):
     name = f"{subdomain_name}.{fqdn}"
     caller_reference = f"AFT-Delegated:{uuid.uuid4().hex}"
 
-    client = get_client('route53', account_id, 'us-east-1')
+    source_client = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
+    target_client = get_client('route53', account_id, 'us-east-1')
 
-    response = client.create_hosted_zone(
+    response = target_client.create_hosted_zone(
         Name=name,
         CallerReference=caller_reference,
+    )
+    name_servers = response['DelegationSet']['NameServers']
+    nameserver_resource_records = [{'Value': ns} for ns in name_servers]
+    print(nameserver_resource_records)
+
+    domain_hosted_zone_id = find_domain(fqdn, domains)['Id']
+
+    response = source_client.change_resource_record_sets(
+        HostedZoneId=domain_hosted_zone_id,
+        ChangeBatch={
+            'Changes': [
+                {
+                    'Action': 'UPSERT',
+                    'ResourceRecordSet': {
+                        'Name': name,
+                        'Type': 'NS',
+                        'TTL': 60,
+                        'ResourceRecords': nameserver_resource_records
+                    }
+                }
+            ]
+        }
     )
     print(response)
 

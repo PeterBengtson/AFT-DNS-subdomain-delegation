@@ -17,9 +17,10 @@ def lambda_handler(data, _context):
     for str in goal:
         subdomain_name, base_domain_name = str.strip('.').split('.', 1)
         base_domain_fqdn = base_domain_name + '.'
+        full_subdomain_name = f"{subdomain_name}.{base_domain_fqdn}"
 
         domain = find_domain(base_domain_fqdn, domains)
-        subdomain = find_domain(base_domain_fqdn, subdomains)
+        subdomain = find_domain(full_subdomain_name, subdomains)
 
         print("Domain", domain)
         print("Subdomain", subdomain)
