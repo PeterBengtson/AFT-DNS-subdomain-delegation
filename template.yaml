@@ -128,17 +128,17 @@ Resources:
     Properties:
       DefinitionUri: statemachine/delegate_dns_subdomains.asl.yaml
       DefinitionSubstitutions:
-        NetworkingAccountId: !Ref NetworkingAccountId
+        NetworkingAccountId: !Sub '${NetworkingAccountId}'
         CollectDomainDataFunctionArn: !GetAtt CollectDomainDataFunction.Arn
         DetermineExtentOfChangesFunctionArn: !GetAtt DetermineExtentOfChangesFunction.Arn
-        DelegateDNSSubdomainsFunctionArn: !GetAtt DelegateDNSSubdomainsFunction.Arn
+        CreateDelegationFunctionArn: !GetAtt CreateDelegationFunction.Arn
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref CollectDomainDataFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref DetermineExtentOfChangesFunction
         - LambdaInvokePolicy:
-            FunctionName: !Ref DelegateDNSSubdomainsFunction
+            FunctionName: !Ref CreateDelegationFunction
 
   CollectDomainDataFunction:
     Type: AWS::Serverless::Function
@@ -165,10 +165,10 @@ Resources:
     Properties:
       CodeUri: functions/determine_extent_of_changes/
 
-  DelegateDNSSubdomainsFunction:
+  CreateDelegationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: functions/delegate_dns_subdomains/
+      CodeUri: functions/create_delegation/
       Policies:
         - Statement:
             - 
@@ -223,7 +223,7 @@ Resources:
   AlarmTriggerFunction:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: INFRA-DelegateDNSSubdomainsTriggerFunction-HIGH
+      AlarmName: INFRA-CreateDelegationTriggerFunction-HIGH
       ActionsEnabled: true
       OKActions: []
       AlarmActions: []

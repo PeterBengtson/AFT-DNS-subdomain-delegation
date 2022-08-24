@@ -52,11 +52,11 @@ def lambda_handler(data, _context):
             update.append(parameters)
             continue
 
-    return {
-        "create": create,
-        "update": update,
-        "delete": delete
-    }
+    data['create'] = create
+    data['update'] = update
+    data['delete'] = delete
+
+    return data
 
 
 def find_domain(fqdn, domains):

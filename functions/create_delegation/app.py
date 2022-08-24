@@ -1,6 +1,7 @@
 import re
 import os
 import boto3
+import uuid
 
 NETWORKING_ACCOUNT_ID = os.environ.get('NETWORKING_ACCOUNT_ID')
 
@@ -8,9 +9,24 @@ sts_client = boto3.client('sts')
 
 
 def lambda_handler(data, _context):
+    print(data)
+
     account_id = data['account_id']
+    subdomain_name = data['domain_data']['subdomain_name']
+    fqdn = data['domain_data']['fqdn']
     domains = data['domains']
     subdomains = data['subdomains']
+
+    name = f"{subdomain_name}.{fqdn}"
+    caller_reference = f"AFT-Delegated:{uuid.uuid4().hex}"
+
+    client = get_client('route53', account_id, 'us-east-1')
+
+    response = client.create_hosted_zone(
+        Name=name,
+        CallerReference=caller_reference,
+    )
+    print(response)
 
 
 def find_domain(fqdn, domains):

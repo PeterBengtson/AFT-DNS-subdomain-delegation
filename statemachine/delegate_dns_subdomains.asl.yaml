@@ -1,4 +1,4 @@
-Comment: Delegates DNS subdomains to an account.
+Comment: Manages delegation of DNS subdomains to an account.
 StartAt: Collect Domain Data
 States:
   Collect Domain Data:
@@ -32,23 +32,37 @@ States:
   Determine Extent of Changes:
     Type: Task
     Resource: '${DetermineExtentOfChangesFunctionArn}'
-    ResultPath: $.changes
     Retry:
       - ErrorEquals:
           - States.TaskFailed
         IntervalSeconds: 5
         MaxAttempts: 5
         BackoffRate: 5
-    Next: Delegate DNS Subdomains
+    Next: Create Delegations
 
-  Delegate DNS Subdomains:
-    Type: Task
-    Resource: '${DelegateDNSSubdomainsFunctionArn}'
+  Create Delegations:
+    Type: Map
+    ItemsPath: $.create
+    MaxConcurrency: 1
+    Parameters:
+      domain_data.$: $$.Map.Item.Value
+      domains.$: $.domains
+      subdomains.$: $.subdomains
     ResultPath: null
-    Retry:
-      - ErrorEquals:
-          - States.TaskFailed
-        IntervalSeconds: 5
-        MaxAttempts: 5
-        BackoffRate: 5
+    Iterator:
+      StartAt: Create Delegation
+      States:
+          Create Delegation:
+              Type: Task
+              Resource: '${CreateDelegationFunctionArn}'
+              ResultPath: null
+              Retry:
+                -
+                  ErrorEquals:
+                    - States.TaskFailed
+                  IntervalSeconds: 5
+                  MaxAttempts: 5
+                  BackoffRate: 5
+              End: true
+
     End: true
