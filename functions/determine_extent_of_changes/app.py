@@ -25,20 +25,22 @@ def lambda_handler(data, _context):
 
         if not domain and not subdomain:
             # This is an error, just ignore: not an existing domain
+            print(f"Error: Domain '{base_domain_name}' not found.")
             continue
 
         if not domain and subdomain:
-            # The domain has been deleted in the Networking account, delete the delegation
+            # The domain has been deleted in the Networking account. Delete the delegation too.
+            print(f"Error: Domain '{base_domain_name}' has been deleted from the Networking account. Deleting the subdomain.")
             delete.append([subdomain_name, base_domain_fqdn])
             continue
 
         if domain and not subdomain:
-            # The domain exists and has not been delegated
+            # The domain exists and has not been delegated. Create a delegation.
             create.append([subdomain_name, base_domain_fqdn])
             continue
 
         if domain and subdomain:
-            # The domain exists and has a delegation, check and update
+            # The domain exists and has been delegated. Check and update if necessary.
             update.append([subdomain_name, base_domain_fqdn])
             continue
 
