@@ -1,4 +1,5 @@
 import re
+import os
 
 def lambda_handler(data, _context):
     account_id = data['account_id']
@@ -28,20 +29,27 @@ def lambda_handler(data, _context):
             print(f"Error: Domain '{base_domain_name}' not found.")
             continue
 
+        parameters = {
+            "subdomain_name": subdomain_name,
+            "fqdn": base_domain_fqdn
+        }
+
         if not domain and subdomain:
             # The domain has been deleted in the Networking account. Delete the delegation too.
-            print(f"Error: Domain '{base_domain_name}' has been deleted from the Networking account. Deleting the subdomain.")
-            delete.append([subdomain_name, base_domain_fqdn])
+            print(f"Domain {base_domain_name} has been deleted from the Networking account. Deleting {str} from account {account_id}.")
+            delete.append(parameters)
             continue
 
         if domain and not subdomain:
             # The domain exists and has not been delegated. Create a delegation.
-            create.append([subdomain_name, base_domain_fqdn])
+            print(f"Delegating {str} to account {account_id}.")
+            create.append(parameters)
             continue
 
         if domain and subdomain:
             # The domain exists and has been delegated. Check and update if necessary.
-            update.append([subdomain_name, base_domain_fqdn])
+            print(f"Updating {str} delegation in account {account_id}.")
+            update.append(parameters)
             continue
 
     return {

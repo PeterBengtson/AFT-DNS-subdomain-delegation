@@ -16,6 +16,13 @@ def lambda_handler(data, _context):
     print(f"Networking account: {NETWORKING_ACCOUNT_ID}")
 
 
+def find_domain(fqdn, domains):
+    for domain in domains:
+        if domain['Name'] == fqdn:
+            return domain
+    return False
+    
+
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):
     other_session = sts_client.assume_role(
         RoleArn=f"arn:aws:iam::{account_id}:role/{role}",
@@ -31,3 +38,4 @@ def get_client(client_type, account_id, region, role='AWSControlTowerExecution')
         aws_session_token=session_token,
         region_name=region
     )
+
