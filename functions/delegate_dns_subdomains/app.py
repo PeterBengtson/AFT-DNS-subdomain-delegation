@@ -9,11 +9,8 @@ sts_client = boto3.client('sts')
 
 def lambda_handler(data, _context):
     account_id = data['account_id']
-    subdomain_delegations = re.split('[,\s]+', data['subdomain_delegations'].strip())
-
-    print(f"Account: {account_id}")
-    print(f"Subdomains: {subdomain_delegations}")
-    print(f"Networking account: {NETWORKING_ACCOUNT_ID}")
+    domains = data['domains']
+    subdomains = data['subdomains']
 
 
 def find_domain(fqdn, domains):
@@ -21,7 +18,7 @@ def find_domain(fqdn, domains):
         if domain['Name'] == fqdn:
             return domain
     return False
-    
+
 
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):
     other_session = sts_client.assume_role(
