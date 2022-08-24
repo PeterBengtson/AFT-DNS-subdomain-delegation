@@ -26,6 +26,7 @@ def get_zones(client):
         zones.extend(response['HostedZones'])
     return zones
 
+
 def get_resource_record_sets(client, zone):
     hosted_zone_id = zone['Id']
     response = client.list_resource_record_sets(HostedZoneId=hosted_zone_id)
