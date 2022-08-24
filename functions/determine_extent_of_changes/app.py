@@ -14,43 +14,44 @@ def lambda_handler(data, _context):
     update = []
     delete = []
 
-    for str in goal:
-        subdomain_name, base_domain_name = str.strip('.').split('.', 1)
-        base_domain_fqdn = base_domain_name + '.'
-        full_subdomain_name = f"{subdomain_name}.{base_domain_fqdn}"
-
-        domain = find_domain(base_domain_fqdn, domains)
-        subdomain = find_domain(full_subdomain_name, subdomains)
-
-        print("Domain", domain)
-        print("Subdomain", subdomain)
-
-        if not domain and not subdomain:
-            # This is an error, just ignore: not an existing domain
-            print(f"Error: Domain '{base_domain_name}' not found.")
-            continue
-
+    for domain_name in goal:
+        subdomain_fqdn = domain_name + '.'
+        subdomain_name, base_domain_fqdn = subdomain_fqdn.split('.', 1)
         parameters = {
             "subdomain_name": subdomain_name,
             "fqdn": base_domain_fqdn
         }
 
-        if not domain and subdomain:
-            # The domain has been deleted in the Networking account. Delete the delegation too.
-            print(f"Domain {base_domain_name} has been deleted from the Networking account. Deleting {str} from account {account_id}.")
-            delete.append(parameters)
+        subdomain = find_domain(subdomain_fqdn, subdomains)
+        if subdomain:
+            # The domain exists and has been delegated. Check and update if necessary.
+            print(f"Updating '{subdomain_fqdn}' delegation in account {account_id}.")
+            update.append(parameters)
             continue
-
-        if domain and not subdomain:
+        else:
             # The domain exists and has not been delegated. Create a delegation.
-            print(f"Delegating {str} to account {account_id}.")
+            print(f"Delegating '{subdomain_fqdn}' to account {account_id}.")
             create.append(parameters)
             continue
 
-        if domain and subdomain:
-            # The domain exists and has been delegated. Check and update if necessary.
-            print(f"Updating {str} delegation in account {account_id}.")
-            update.append(parameters)
+    for subdomain in subdomains:
+        subdomain_fqdn = subdomain['Name']
+        subdomain_name, base_domain_fqdn = subdomain_fqdn.split('.', 1)
+        parameters = {
+            "subdomain_name": subdomain_name,
+            "fqdn": base_domain_fqdn
+        }
+        
+        domain = find_domain(base_domain_fqdn, domains)
+        if not domain:
+            # The domain has been deleted in the Networking account. Delete the delegation too.
+            print(f"Domain '{subdomain_fqdn}' has been deleted from the Networking account. Deleting it from account {account_id}.")
+            delete.append(parameters)
+            continue
+
+        if subdomain_not_in_goal(subdomain_name, base_domain_fqdn, goal):
+            print(f"Deleting '{subdomain_fqdn}' delegation to account {account_id}.")
+            delete.append(parameters)
             continue
 
     data['create'] = create
@@ -65,3 +66,10 @@ def find_domain(fqdn, domains):
         if domain['Name'] == fqdn:
             return domain
     return False
+
+
+def subdomain_not_in_goal(subdomain_name, base_domain_fqdn, goal):
+    for domain_name in goal:
+        if f"{subdomain_name}.{base_domain_fqdn}" == domain_name + '.':
+            return False
+    return True

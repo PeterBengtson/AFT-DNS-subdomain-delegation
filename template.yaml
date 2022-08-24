@@ -133,6 +133,7 @@ Resources:
         DetermineExtentOfChangesFunctionArn: !GetAtt DetermineExtentOfChangesFunction.Arn
         CreateDelegationFunctionArn: !GetAtt CreateDelegationFunction.Arn
         UpdateDelegationFunctionArn: !GetAtt UpdateDelegationFunction.Arn
+        DeleteDelegationFunctionArn: !GetAtt DeleteDelegationFunction.Arn
       Policies:
         - LambdaInvokePolicy:
             FunctionName: !Ref CollectDomainDataFunction
@@ -142,6 +143,8 @@ Resources:
             FunctionName: !Ref CreateDelegationFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref UpdateDelegationFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref DeleteDelegationFunction
 
   CollectDomainDataFunction:
     Type: AWS::Serverless::Function
@@ -184,7 +187,8 @@ Resources:
               Sid: Route53Permissions
               Effect: Allow
               Action:
-                - route53:*
+                - route53:CreateHostedZone
+                - route53:ChangeResourceRecordSets
               Resource: '*'
       Environment:
         Variables:
@@ -206,6 +210,29 @@ Resources:
               Sid: Route53Permissions
               Effect: Allow
               Action:
+                - route53:ChangeResourceRecordSets
+              Resource: '*'
+      Environment:
+        Variables:
+          NETWORKING_ACCOUNT_ID: !Ref NetworkingAccountId
+
+  DeleteDelegationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/delete_delegation/
+      Policies:
+        - Statement:
+            - 
+              Sid: AssumeTheRole
+              Effect: Allow
+              Action:
+                - sts:AssumeRole
+              Resource: 'arn:aws:iam::*:role/AWSControlTowerExecution'
+            - 
+              Sid: Route53Permissions
+              Effect: Allow
+              Action:
+                - route53:DeleteHostedZone
                 - route53:ChangeResourceRecordSets
               Resource: '*'
       Environment:
