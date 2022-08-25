@@ -15,7 +15,7 @@ def lambda_handler(data, _context):
     subdomain_name = data['domain_data']['subdomain_name']
     fqdn = data['domain_data']['fqdn']
     domains = data['domains']
-    subdomains = data['subdomains']
+    # subdomains = data['subdomains']
 
     name = f"{subdomain_name}.{fqdn}"
     caller_reference = f"AFT-Delegated:{uuid.uuid4().hex}"

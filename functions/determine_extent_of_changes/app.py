@@ -16,7 +16,7 @@ def lambda_handler(data, _context):
     print(f"Goal: {goal}")
     print(f"Goners: {goners}")
 
-    domains = data['domains']
+    # domains = data['domains']
     subdomains = data['subdomains']
 
     create = []
