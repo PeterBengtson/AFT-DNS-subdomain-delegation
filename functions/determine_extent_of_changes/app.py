@@ -4,6 +4,8 @@ import os
 def lambda_handler(data, _context):
     account_id = data['account_id']
     goal = re.split('[,\s]+', data['subdomain_delegations'].strip())
+    if goal == ['']:
+        goal = []
     print(f"Account: {account_id}")
     print(f"Goal: {goal}")
 
