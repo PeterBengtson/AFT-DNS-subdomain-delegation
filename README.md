@@ -54,7 +54,7 @@ SUBDOMAIN_DELEGATIONS=$(aws ssm get-parameters --names /aft/account-request/cust
 echo "Subdomain delegations: $SUBDOMAIN_DELEGATIONS"
 
 echo "Obtaining subdomain delegations to remove for account $ACCOUNT_ID..."
-SUBDOMAIN_DELEGATIONS=$(aws ssm get-parameters --names /aft/account-request/custom-fields/subdomain_delegations_to_remove --query "Parameters[0].Value")
+SUBDOMAIN_DELEGATIONS_TO_REMOVE=$(aws ssm get-parameters --names /aft/account-request/custom-fields/subdomain_delegations_to_remove --query "Parameters[0].Value")
 echo "Subdomain delegations: $SUBDOMAIN_DELEGATIONS_TO_REMOVE"
 
 echo "Posting SNS message to configure subdomain delegations for the account $ACCOUNT_ID..."
