@@ -65,8 +65,8 @@ aws sns publish --topic-arn "arn:aws:sns:xx-xxxx-1:111122223333:aft-subdomain-de
 
 ## Protecting the settings
 
-You will probably want to include something like the following in an SCP to protect the AFT settings 
-from being tampered with:
+You will probably want to include something like the following in an SCP and/or a boundary policy to protect the AFT settings 
+from tampering:
 ```json
 {
   "Sid": "DenyAFTCustomFieldsModification",
