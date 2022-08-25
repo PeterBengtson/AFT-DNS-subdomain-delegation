@@ -90,7 +90,7 @@ from tampering:
 }
 ```
 
-You can add the following to the same SCP to block users of a permission set from using or 
+You can add the following to the same SCP and/or boundary policy to block users of a permission set from using or 
 even seeing the values of the SSO parameters in their own accounts. Substitute `DeveloperAccess`
 with the name of your own permission set, but keep the prefix and wildcard characters:
 ```json
