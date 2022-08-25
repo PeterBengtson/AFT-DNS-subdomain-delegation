@@ -17,7 +17,7 @@ module "john-doe-account" {
 
   custom_fields = {
     subdomain_delegations = "foo.example.com, foo.example.io"
-    subdomain_delegations_to_remove = "bar.example.io"
+    subdomain_delegations_to_remove = "gone.example.io"
   }
 }
 ```
