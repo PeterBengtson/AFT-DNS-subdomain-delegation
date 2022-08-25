@@ -53,9 +53,13 @@ echo "Obtaining subdomain delegations for account $ACCOUNT_ID..."
 SUBDOMAIN_DELEGATIONS=$(aws ssm get-parameters --names /aft/account-request/custom-fields/subdomain_delegations --query "Parameters[0].Value")
 echo "Subdomain delegations: $SUBDOMAIN_DELEGATIONS"
 
+echo "Obtaining subdomain delegations to remove for account $ACCOUNT_ID..."
+SUBDOMAIN_DELEGATIONS=$(aws ssm get-parameters --names /aft/account-request/custom-fields/subdomain_delegations_to_remove --query "Parameters[0].Value")
+echo "Subdomain delegations: $SUBDOMAIN_DELEGATIONS_TO_REMOVE"
+
 echo "Posting SNS message to configure subdomain delegations for the account $ACCOUNT_ID..."
 aws sns publish --topic-arn "arn:aws:sns:xx-xxxx-1:111122223333:aft-subdomain-delegation-topic" \
-  --message "{\"account_id\": \"$ACCOUNT_ID\", \"subdomain_delegations\": \"$SUBDOMAIN_DELEGATIONS\"}"
+  --message "{\"account_id\": \"$ACCOUNT_ID\", \"subdomain_delegations\": \"$SUBDOMAIN_DELEGATIONS\", \"subdomain_delegations_to_remove\": \"$SUBDOMAIN_DELEGATIONS_TO_REMOVE\"}"
 ```
 
 
