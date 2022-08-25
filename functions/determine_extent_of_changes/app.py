@@ -3,11 +3,18 @@ import os
 
 def lambda_handler(data, _context):
     account_id = data['account_id']
+
     goal = re.split('[,\s]+', data['subdomain_delegations'].strip())
     if goal == ['']:
         goal = []
+
+    goners = re.split('[,\s]+', data['subdomain_delegations_to_remove'].strip())
+    if goners == ['']:
+        goners = []
+
     print(f"Account: {account_id}")
     print(f"Goal: {goal}")
+    print(f"Goners: {goners}")
 
     domains = data['domains']
     subdomains = data['subdomains']
@@ -36,22 +43,17 @@ def lambda_handler(data, _context):
             create.append(parameters)
             continue
 
-    for subdomain in subdomains:
-        subdomain_fqdn = subdomain['Name']
+    for goner in goners:
+        subdomain_fqdn = goner + '.'
         subdomain_name, base_domain_fqdn = subdomain_fqdn.split('.', 1)
         parameters = {
             "subdomain_name": subdomain_name,
             "fqdn": base_domain_fqdn
         }
-        
-        domain = find_domain(base_domain_fqdn, domains)
-        if not domain:
-            # The domain has been deleted in the Networking account. Delete the delegation too.
-            print(f"Domain '{subdomain_fqdn}' has been deleted from the Networking account. Deleting it from account {account_id}.")
-            delete.append(parameters)
-            continue
 
-        if subdomain_not_in_goal(subdomain_name, base_domain_fqdn, goal):
+        subdomain = find_domain(subdomain_fqdn, subdomains)
+        if subdomain:
+            # The goner domain is delegated to the account. Delete the delegation.
             print(f"Deleting '{subdomain_fqdn}' delegation to account {account_id}.")
             delete.append(parameters)
             continue
@@ -68,10 +70,3 @@ def find_domain(fqdn, domains):
         if domain['Name'] == fqdn:
             return domain
     return False
-
-
-def subdomain_not_in_goal(subdomain_name, base_domain_fqdn, goal):
-    for domain_name in goal:
-        if f"{subdomain_name}.{base_domain_fqdn}" == domain_name + '.':
-            return False
-    return True

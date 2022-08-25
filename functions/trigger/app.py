@@ -16,8 +16,10 @@ def lambda_handler(event, _context):
 
     account_id = message['account_id']
     subdomain_delegations = message.get('subdomain_delegations')
+    subdomain_delegations_to_remove = message.get('subdomain_delegations_to_remove')
 
     message['subdomain_delegations'] = subdomain_delegations if subdomain_delegations else ''
+    message['subdomain_delegations_to_remove'] = subdomain_delegations_to_remove if subdomain_delegations_to_remove else ''
 
     random_number = randint(100000, 999999)
     name = f'delegate-account-{account_id}-subdomains-{random_number}'
