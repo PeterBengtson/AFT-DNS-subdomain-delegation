@@ -3,15 +3,9 @@ import os
 
 def lambda_handler(data, _context):
     account_id = data['account_id']
-
-    goal = re.split('[,\s]+', data['subdomain_delegations'].strip())
-    if goal == ['']:
-        goal = []
-
-    goners = re.split('[,\s]+', data['subdomain_delegations_to_remove'].strip())
-    if goners == ['']:
-        goners = []
-
+    goal = data['subdomain_delegations']
+    goners = data['subdomain_delegations_to_remove']
+    
     print(f"Account: {account_id}")
     print(f"Goal: {goal}")
     print(f"Goners: {goners}")

@@ -1,4 +1,5 @@
 import os
+import re
 from random import randint
 import json
 import boto3
@@ -15,11 +16,8 @@ def lambda_handler(event, _context):
     message = json.loads(message_raw)
 
     account_id = message['account_id']
-    subdomain_delegations = message.get('subdomain_delegations')
-    subdomain_delegations_to_remove = message.get('subdomain_delegations_to_remove')
-
-    message['subdomain_delegations'] = subdomain_delegations if subdomain_delegations else ''
-    message['subdomain_delegations_to_remove'] = subdomain_delegations_to_remove if subdomain_delegations_to_remove else ''
+    message['subdomain_delegations'] = convert_to_list(message.get('subdomain_delegations'))
+    message['subdomain_delegations_to_remove'] = convert_to_list(message.get('subdomain_delegations_to_remove'))
 
     random_number = randint(100000, 999999)
     name = f'delegate-account-{account_id}-subdomains-{random_number}'
@@ -33,3 +31,13 @@ def lambda_handler(event, _context):
     )
 
     return True
+
+
+def convert_to_list(thing):
+    if not thing:
+        return []
+    list = re.split('[,\s]+', thing.strip())
+    if list == ['']:
+        list = []
+    return list
+
