@@ -1,7 +1,5 @@
-import re
 import os
 import boto3
-import uuid
 
 NETWORKING_ACCOUNT_ID = os.environ.get('NETWORKING_ACCOUNT_ID')
 
