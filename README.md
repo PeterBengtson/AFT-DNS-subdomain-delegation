@@ -26,12 +26,12 @@ Since there already might be any number of subdomains on different levels in the
 we cannot just remove everything not explicitly mentioned. Instead, we separate creation and 
 deletion lists into two idempotent arguments:
 
-`subdomain_delegations` is a list of subdomains that are to be delegated to the account. If
+* `subdomain_delegations` is a list of subdomains that are to be delegated to the account. If
 an account in this list already exists, its NS information will be updated in the Networking
 account. If it does not exist, a local zone will be created and its NS information used to
 set up the delegation from the Networking account.
 
-`subdomain_delegations_to_remove` is a list of subdomains delegations that are to be removed
+* `subdomain_delegations_to_remove` is a list of subdomains delegations that are to be removed
 from the account. If a delegation does not exist, nothing will be done.
 
 Thus, the procedure for deleting a delegation from the account is to move it from 
