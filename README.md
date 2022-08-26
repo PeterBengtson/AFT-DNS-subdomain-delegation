@@ -33,6 +33,11 @@ set up the delegation from the Networking account.
 `subdomain_delegations_to_remove` is a list of subdomains delegations that are to be removed
 from the account. If a delegation does not exist, nothing will be done.
 
+Thus, the procedure for deleting a delegation from the account is to move it from 
+`subdomain_delegations` to `subdomain_delegations_to_remove` and then run the AFT 
+customisations pipeline. After that, you can leave the delegation removal where it is, or
+delete it from `subdomain_delegations_to_remove`.
+
 
 ## Installation
 
