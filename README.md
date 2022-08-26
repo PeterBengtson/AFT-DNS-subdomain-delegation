@@ -22,7 +22,7 @@ module "john-doe-account" {
 }
 ```
 Since there might be any number of subdomains on different levels in the accounts, we cannot
-just remove everything not explicitly specified. Instead, we separate cretion and deletion
+just remove everything not explicitly mentioned. Instead, we separate cretion and deletion
 lists into two arguments:
 
 `subdomain_delegations` is a list of subdomains that are to be delegated to the account. If
