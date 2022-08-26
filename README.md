@@ -21,6 +21,7 @@ module "john-doe-account" {
   }
 }
 ```
+
 Since there already might be any number of subdomains on different levels in the accounts, 
 we cannot just remove everything not explicitly mentioned. Instead, we separate creation and 
 deletion lists into two arguments:
