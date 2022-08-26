@@ -21,9 +21,17 @@ module "john-doe-account" {
   }
 }
 ```
+Since there might be any number of subdomains on different levels in the accounts, we cannot
+just remove everything not explicitly specified. Instead, we separate cretion and deletion
+lists into two arguments:
 
-NB: Any delegations not explicitly mentioned will be deleted automatically. The list
-of delegations is descriptive and the results are idempotent.
+`subdomain_delegations` is a list of subdomains that are to be delegated to the account. If
+an account in this list already exists, its NS information will be updated in the Networking
+account. If it does not exist, a local zone will be created and its NS information used to
+set up the delegation from the Networking account.
+
+`subdomain_delegations_to_remove` is a list of subdomains delegations that are to be removed
+from the account. If a delegation does not exist, nothing will be done.
 
 
 ## Installation
