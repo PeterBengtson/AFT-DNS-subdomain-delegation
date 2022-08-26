@@ -5,12 +5,11 @@ def lambda_handler(data, _context):
     account_id = data['account_id']
     goal = data['subdomain_delegations']
     goners = data['subdomain_delegations_to_remove']
-    
+
     print(f"Account: {account_id}")
     print(f"Goal: {goal}")
     print(f"Goners: {goners}")
 
-    # domains = data['domains']
     subdomains = data['subdomains']
 
     create = []
@@ -25,8 +24,7 @@ def lambda_handler(data, _context):
             "fqdn": base_domain_fqdn
         }
 
-        subdomain = find_domain(subdomain_fqdn, subdomains)
-        if subdomain:
+        if subdomains.get(subdomain_fqdn):
             # The domain exists and has been delegated. Check and update if necessary.
             print(f"Updating '{subdomain_fqdn}' delegation in account {account_id}.")
             update.append(parameters)
@@ -45,8 +43,7 @@ def lambda_handler(data, _context):
             "fqdn": base_domain_fqdn
         }
 
-        subdomain = find_domain(subdomain_fqdn, subdomains)
-        if subdomain:
+        if subdomains.get(subdomain_fqdn):
             # The goner domain is delegated to the account. Delete the delegation.
             print(f"Deleting '{subdomain_fqdn}' delegation to account {account_id}.")
             delete.append(parameters)
@@ -57,10 +54,3 @@ def lambda_handler(data, _context):
     data['delete'] = delete
 
     return data
-
-
-def find_domain(fqdn, domains):
-    for domain in domains:
-        if domain['Name'] == fqdn:
-            return domain
-    return False

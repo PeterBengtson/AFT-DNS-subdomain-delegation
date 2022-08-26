@@ -15,21 +15,22 @@ def lambda_handler(data, _context):
     domains = data['domains']
     subdomains = data['subdomains']
 
-    name = f"{subdomain_name}.{fqdn}"
-    nameserver_resource_records = find_nameserver_records(find_domain(name, subdomains))
-    subdomain_hosted_zone_id = find_domain(name, subdomains)['Id']
-    domain_hosted_zone_id = find_domain(fqdn, domains)['Id']
-
+    source_client = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
     target_client = get_client('route53', account_id, 'us-east-1')
+
+    name = f"{subdomain_name}.{fqdn}"
+    subdomain_hosted_zone_id = subdomains[name]
+    nameserver_resource_records = find_nameserver_records(target_client, subdomain_hosted_zone_id)
+
     print(f"Deleting hosted zone {name} from account {account_id}...")
     response = target_client.delete_hosted_zone(
         Id=subdomain_hosted_zone_id
     )
     print(response)
 
-    source_client = get_client('route53', NETWORKING_ACCOUNT_ID, 'us-east-1')
 
     print(f"Deleting NS records in {fqdn} in Networking account {NETWORKING_ACCOUNT_ID}...")
+    domain_hosted_zone_id = domains[fqdn]
     response = source_client.change_resource_record_sets(
         HostedZoneId=domain_hosted_zone_id,
         ChangeBatch={
@@ -49,18 +50,28 @@ def lambda_handler(data, _context):
     print(response)
 
 
-def find_domain(fqdn, domains):
-    for domain in domains:
-        if domain['Name'] == fqdn:
-            return domain
-    return False
-
-
-def find_nameserver_records(subdomain):
-    for record_set in subdomain['ResourceRecordSets']:
+def find_nameserver_records(client, hosted_zone_id):
+    resource_record_sets = get_ns_records(client, hosted_zone_id)
+    for record_set in resource_record_sets:
         if record_set['Type'] == 'NS':
             return record_set['ResourceRecords']
     return False
+
+
+def get_ns_records(client, hosted_zone_id):
+    response = client.list_resource_record_sets(
+        HostedZoneId=hosted_zone_id
+    )
+    resource_record_sets = response['ResourceRecordSets']
+    while response['IsTruncated']:
+        response = client.list_resource_record_sets(
+            HostedZoneId=hosted_zone_id,
+            StartRecordName=response['NextRecordName'],
+            StartRecordType=response['NextRecordType'],
+            StartRecordIdentifier=response['NextRecordIdentifier']
+        )
+        resource_record_sets.extend(response['ResourceRecordSets'])
+    return resource_record_sets
 
 
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):

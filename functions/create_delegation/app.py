@@ -14,7 +14,6 @@ def lambda_handler(data, _context):
     subdomain_name = data['domain_data']['subdomain_name']
     fqdn = data['domain_data']['fqdn']
     domains = data['domains']
-    # subdomains = data['subdomains']
 
     name = f"{subdomain_name}.{fqdn}"
     caller_reference = f"AFT-Delegated:{uuid.uuid4().hex}"
@@ -30,7 +29,7 @@ def lambda_handler(data, _context):
     name_servers = response['DelegationSet']['NameServers']
     nameserver_resource_records = [{'Value': ns} for ns in name_servers]
 
-    domain_hosted_zone_id = find_domain(fqdn, domains)['Id']
+    domain_hosted_zone_id = domains[fqdn]
 
     print(f"Creating NS records in {fqdn} in Networking account {NETWORKING_ACCOUNT_ID}...")
     response = source_client.change_resource_record_sets(
@@ -52,13 +51,6 @@ def lambda_handler(data, _context):
     print(response)
 
 
-def find_domain(fqdn, domains):
-    for domain in domains:
-        if domain['Name'] == fqdn:
-            return domain
-    return False
-
-
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):
     other_session = sts_client.assume_role(
         RoleArn=f"arn:aws:iam::{account_id}:role/{role}",
@@ -74,4 +66,3 @@ def get_client(client_type, account_id, region, role='AWSControlTowerExecution')
         aws_session_token=session_token,
         region_name=region
     )
-

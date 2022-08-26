@@ -11,11 +11,12 @@ def lambda_handler(data, _context):
 
     client = get_client('route53', account_id, 'us-east-1')
 
+    result = {}
     zones = get_zones(client)
     for zone in zones:
-        zone['ResourceRecordSets'] = get_resource_record_sets(client, zone)
+        result[zone['Name']] = zone['Id']
 
-    return zones
+    return result
 
 
 def get_zones(client):
@@ -26,22 +27,6 @@ def get_zones(client):
         zones.extend(response['HostedZones'])
     return zones
 
-
-def get_resource_record_sets(client, zone):
-    hosted_zone_id = zone['Id']
-    response = client.list_resource_record_sets(HostedZoneId=hosted_zone_id)
-    resource_record_sets = response['ResourceRecordSets']
-    while response['IsTruncated']:
-        response = client.list_resource_record_sets(
-            HostedZoneId=hosted_zone_id,
-            StartRecordName=response['NextRecordName'],
-            StartRecordType=response['NextRecordType'],
-            StartRecordIdentifier=response['NextRecordIdentifier']
-        )
-        resource_record_sets.extend(response['ResourceRecordSets'])
-    return resource_record_sets
-
-    
 
 def get_client(client_type, account_id, region, role='AWSControlTowerExecution'):
     other_session = sts_client.assume_role(

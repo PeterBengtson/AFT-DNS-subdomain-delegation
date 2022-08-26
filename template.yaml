@@ -163,7 +163,6 @@ Resources:
               Effect: Allow
               Action:
                 - route53:ListHostedZones
-                - route53:ListResourceRecordSets
               Resource: '*'
 
   DetermineExtentOfChangesFunction:
@@ -211,6 +210,7 @@ Resources:
               Effect: Allow
               Action:
                 - route53:ChangeResourceRecordSets
+                - route53:ListResourceRecordSets
               Resource: '*'
       Environment:
         Variables:
@@ -232,8 +232,9 @@ Resources:
               Sid: Route53Permissions
               Effect: Allow
               Action:
-                - route53:DeleteHostedZone
                 - route53:ChangeResourceRecordSets
+                - route53:DeleteHostedZone
+                - route53:ListResourceRecordSets
               Resource: '*'
       Environment:
         Variables:
