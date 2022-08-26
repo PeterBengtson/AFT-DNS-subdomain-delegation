@@ -24,7 +24,7 @@ module "john-doe-account" {
 
 Since there already might be any number of subdomains on different levels in the accounts, 
 we cannot just remove everything not explicitly mentioned. Instead, we separate creation and 
-deletion lists into two arguments:
+deletion lists into two idempotent arguments:
 
 `subdomain_delegations` is a list of subdomains that are to be delegated to the account. If
 an account in this list already exists, its NS information will be updated in the Networking
