@@ -277,6 +277,7 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmName: INFRA-CreateDelegationTriggerFunction-HIGH
+      AlarmDescription: CreateDelegationTriggerFunction failed.
       ActionsEnabled: true
       OKActions: []
       AlarmActions: []
