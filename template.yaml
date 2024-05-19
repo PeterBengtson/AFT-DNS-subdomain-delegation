@@ -107,13 +107,13 @@ Resources:
       Action: lambda:InvokeFunction
       SourceArn: !Ref AFTSubdomainDelegationTopic
 
-  SubscribeLambdaToSns:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Endpoint: !GetAtt TriggerFunction.Arn
-      Protocol: lambda
-      TopicArn: !Ref AFTSubdomainDelegationTopic
-      Region: !Sub '${AWS::Region}'
+  # SubscribeLambdaToSns:
+  #   Type: AWS::SNS::Subscription
+  #   Properties:
+  #     Endpoint: !GetAtt TriggerFunction.Arn
+  #     Protocol: lambda
+  #     TopicArn: !Ref AFTSubdomainDelegationTopic
+  #     Region: !Sub '${AWS::Region}'
 
 
   ###############################################################################
