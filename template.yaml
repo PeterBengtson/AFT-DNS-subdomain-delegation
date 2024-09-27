@@ -13,11 +13,6 @@ Description:
   declarative way.
 
 Parameters:
-  OrgId:
-    Type: String
-    Description: The organisation ID of the AWS Organization
-    Default: "o-xxxxxxxxxx"
-
   NetworkingAccountId:
     Type: String
     Description: The name of the account where DNS domains are hosted and for which
