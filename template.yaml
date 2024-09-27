@@ -24,6 +24,11 @@ Parameters:
       delegation of subdomains should be done.
     Default: "111122223333"   
  
+  AFTManagementAccountId:
+    Type: String
+    Description: The name of the AFT Management account.
+    Default: "444455556666"   
+ 
 
 # ------------------------------------------------------------------------------
 
@@ -47,25 +52,31 @@ Resources:
         Version: '2012-10-17'
         Statement:
           - 
-            Sid: AFTCrossAccountAccess
+            Sid: AFTManagementAccountAccess
             Effect: Allow
-            Principal: "*"
+            Principal: 
+              AWS: !Sub 'arn:aws:iam::${AFTManagementAccountId}:role/AWSAFTExecution'
             Resource: !Ref AFTSubdomainDelegationTopic
             Action: 'sns:Publish'
-            Condition: 
-              "StringEquals": 
-                "aws:PrincipalOrgID": !Ref OrgId
-              "ArnLike":
-                "aws:PrincipalArn": "arn:aws:iam::*:role/AWSAFTExecution"
           - 
             Sid: AllowUse
             Effect: Allow
-            Principal: '*'
+            Principal: 
+              AWS: !Sub '${AWS::AccountId}'
             Resource: !Ref AFTSubdomainDelegationTopic
             Action:
               - sns:Subscribe
               - sns:Receive
               - sns:ListSubscriptionsByTopic
+          - 
+            Sid: AllowAWSChatbot
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot'
+            Resource: !Ref AFTSubdomainDelegationTopic
+            Action:
+              - sns:Subscribe
+              - sns:Receive
       Topics:
         - !Ref AFTSubdomainDelegationTopic
 
@@ -106,15 +117,6 @@ Resources:
       Principal: sns.amazonaws.com
       Action: lambda:InvokeFunction
       SourceArn: !Ref AFTSubdomainDelegationTopic
-
-  # SubscribeLambdaToSns:
-  #   Type: AWS::SNS::Subscription
-  #   Properties:
-  #     Endpoint: !GetAtt TriggerFunction.Arn
-  #     Protocol: lambda
-  #     TopicArn: !Ref AFTSubdomainDelegationTopic
-  #     Region: !Sub '${AWS::Region}'
-
 
   ###############################################################################
   #
