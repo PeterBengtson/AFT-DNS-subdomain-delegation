@@ -73,7 +73,7 @@ Resources:
             Condition:
               StringLike:
                 "aws:PrincipalArn": "arn:aws:iam::*:role/aws-service-role/management.chatbot.amazonaws.com/AWSServiceRoleForAWSChatbot"
-            Resource: !Ref AccountCreatedTopic
+            Resource: !Ref AFTSubdomainDelegationTopic
             Action:
               - sns:Subscribe
               - sns:Receive
